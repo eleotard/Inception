@@ -1,0 +1,37 @@
+server {
+	#ecoute sur toutes les adresses IPv4
+	listen 443 ssl http2;
+	#ecoute sur toutes les adresses IPv6 
+	listen [::]:443 ssl http2;
+
+	# SSL configuration
+	ssl_certificate /etc/ssl/inception.crt;
+	ssl_certificate_key /etc/ssl/inception.key;
+	ssl_protocols TLSv1.2 TLSv1.3;
+	
+	root /var/www/html/wordpress;
+
+	# Add index.php to the list if you are using PHP
+	index index.php;
+
+	server_name eleotard.42.fr www.eleotard.42.fr;
+
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+	}
+
+	# pass PHP scripts to FastCGI server
+	location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+	 	include		fastcgi_params;
+	 	fastcgi_param	SCRIPT_NAME $fastcgi_script_name;
+	 	fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	 	fastcgi_index	index.php;
+	 	fastcgi_pass 	wordpress:9000;
+
+	}
+
+}
+

@@ -1,0 +1,48 @@
+version '3'
+
+services:
+  nginx:
+    depends on:
+      - wordpress
+    container_name: nginx
+    env_file:
+      - .env
+    build:
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 443:443
+    volumes:
+      - wordpress-volume:/var/www/html/wordpress
+    networks:
+      - inception
+  mariadb:
+      container_name: mariadb
+      env_file:
+        - .env
+      build:
+        context: requirements/mariadb
+        dockerfile: Dockerfile
+      volumes:
+        - mariadb-volume:/var/lib/mysql
+      networks:
+        - inception
+
+volumes:
+  wordpress-volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/data/eleotard/wordpress
+      o: bind
+  mariadb-volume:
+    driver: local
+    driver_opts: 
+      type: non
+      device: /home/data/eleotard/mariadb
+      o: bind
+
+networks:
+  inception:
+    driver: bridge
