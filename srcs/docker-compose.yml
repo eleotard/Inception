@@ -2,7 +2,7 @@ version '3'
 
 services:
   nginx:
-    depends on:
+    depends_on:
       - wordpress
     container_name: nginx
     env_file:
@@ -14,9 +14,25 @@ services:
     ports:
       - 443:443
     volumes:
-      - wordpress-volume:/var/www/html/wordpress
+      - wordpress-volume:/var/www/wordpress
     networks:
       - inception
+  
+  wordpress:
+    depends_on:
+      - mariadb
+    container_name: wordpress
+    env_file:
+      - env
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    restart: on-failure
+    volumes:
+      - wordpress-volume:/var/www/wordpress
+    networks:
+      - inception
+
   mariadb:
       container_name: mariadb
       env_file:
