@@ -6,9 +6,9 @@ RUN	apt-get update -y; \
 	apt-get upgrade -y; \
 	apt-get install mariadb-server mariadb-client -y
 
-COPY	./tools/init.sh /usr/local/bin
+COPY	./tools/mdb_init.sh /usr/local/bin
 
-RUN	chmod -x /user/local/bin/init.sh
+RUN	chmod +x /user/local/bin/mdb_init.sh
 
 RUN	mkdir -p /var/run/mysql; \
 	chown -R mysql:mysql /var/run/mysql; \

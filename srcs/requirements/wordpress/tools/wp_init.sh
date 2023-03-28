@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -f /var/www/worpress/wp-config.php]
+if [ -f /var/www/worpress/wp-config.php ];
 
 then
 	echo "Wordpress already installed"
@@ -22,4 +22,4 @@ else
 	echo "Wordpress installation finished"
 fi
 
-#exec "$@"
+exec "$@"
