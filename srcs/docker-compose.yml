@@ -20,10 +20,12 @@ services:
   
   wordpress:
     depends_on:
-      - mariadb
+      - db
     container_name: wordpress
     env_file:
       - .env
+    ports:
+      - "9000"
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
@@ -32,17 +34,28 @@ services:
       - wordpress-volume:/var/www/wordpress
     networks:
       - inception
-  mariadb:
-    container_name: mariadb
-    env_file:
+  db:
+    image: mariadb:10.5   
+    restart: always
+    environment:
       - .env
-    build:
-      context: ./requirements/mariadb
-      dockerfile: Dockerfile
-    volumes:
-      - mariadb-volume:/var/lib/mysql
-    networks:
-      - inception
+        # volumes:
+        #- db_data:/var/lib/mysql
+        
+        
+        #mariadb:
+        #container_name: mariadb
+        #  env_file:
+        # - .env
+        # ports:
+        #   - "3306"
+        #build:
+        # context: ./requirements/mariadb
+        #dockerfile: Dockerfile
+        #volumes:
+        #- mariadb-volume:/var/lib/mysql
+        #networks:
+        # - inception
     
 volumes:
   wordpress-volume:
@@ -51,12 +64,13 @@ volumes:
       type: none
       device: /home/eleotard/data/wordpress
       o: bind
-  mariadb-volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/eleotard/data/mariadb
-      o: bind
+        #db:
+        #mariadb-volume:
+        #driver: local
+        #   driver_opts:
+        # type: none
+        # device: /home/eleotard/data/mariadb
+        #    o: bind
 
 networks:
   inception:
