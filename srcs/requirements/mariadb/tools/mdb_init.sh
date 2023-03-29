@@ -11,3 +11,4 @@ if [ -d ""]
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS "
 
 
+exec "$@"

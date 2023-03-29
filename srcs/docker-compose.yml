@@ -32,17 +32,11 @@ services:
       - inception
 
 volumes:
-  wordpress-volume:
+  srcs_wordpress-volume:
     driver: local
     driver_opts:
       type: none
-      device: /home/data/eleotard/wordpress
-      o: bind
-  mariadb-volume:
-    driver: local
-    driver_opts: 
-      type: non
-      device: /home/data/eleotard/mariadb
+      device: /home/eleotard/data/wordpress
       o: bind
 
 networks:

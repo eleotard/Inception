@@ -17,6 +17,8 @@ COPY	./tools/wp_init.sh /usr/local/bin/
 RUN	chmod +x /usr/local/bin/wp_init.sh
 RUN	mkdir -p /run/php
 
+WORKDIR	/var/www/
+
 ENTRYPOINT ["/usr/local/bin/wp_init.sh"]
 
 CMD ["/usr/sbin/php-fpm7.3", "-F"]
