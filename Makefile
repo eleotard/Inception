@@ -14,5 +14,5 @@ fclean: stop erase
 	sudo docker system prune -af
 	sudo docker volume rm -f $$(docker volume ls -q)
 
-re: stop all
+re: fclean all
 

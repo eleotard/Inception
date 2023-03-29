@@ -14,11 +14,13 @@ services:
     ports:
       - 443:443
     volumes:
-      - srcs_wordpress-volume:/var/www/wordpress
+      - wordpress-volume:/var/www/wordpress
     networks:
       - inception
   
   wordpress:
+    depends_on:
+      - mariadb
     container_name: wordpress
     env_file:
       - .env
@@ -27,16 +29,33 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     volumes:
-      - srcs_wordpress-volume:/var/www/wordpress
+      - wordpress-volume:/var/www/wordpress
     networks:
       - inception
-
+  mariadb:
+    container_name: mariadb
+    env_file:
+      - .env
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    volumes:
+      - mariadb-volume:/var/lib/mysql
+    networks:
+      - inception
+    
 volumes:
-  srcs_wordpress-volume:
+  wordpress-volume:
     driver: local
     driver_opts:
       type: none
       device: /home/eleotard/data/wordpress
+      o: bind
+  mariadb-volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/eleotard/data/mariadb
       o: bind
 
 networks:

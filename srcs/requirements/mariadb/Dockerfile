@@ -9,12 +9,13 @@ RUN	apt-get update -y; \
 COPY	./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 COPY	./tools/mdb_init.sh /usr/local/bin
 
-RUN	chmod +x /user/local/bin/mdb_init.sh
+RUN	chmod +x /usr/local/bin/mdb_init.sh
 
-RUN	mkdir -p /var/run/mysql; \
-	chown -R mysql:mysql /var/run/mysql; \
+RUN	mkdir -p /var/run/mysqld; \
+	chown -R mysql:mysql /var/run/mysqld; \
+	chmod 777 /var/run/mysqld; \
 	apt-get autoclean -y
 
-ENTRYPOINT ["sh", "/usr/local/bin/init.sh"]
+ENTRYPOINT ["sh", "/usr/local/bin/mdb_init.sh"]
 
-CMD ["mysqld", "--bind-adress=0.0.0.0", "--log-error=/var/lib/mysql/error.log"]
+#CMD ["mysqld", "--bind-adress=0.0.0.0", "--log-error=/var/lib/mysql/error.log"]
