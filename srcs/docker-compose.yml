@@ -4,6 +4,7 @@ services:
   nginx:
     depends_on:
       - wordpress
+    image: nginx
     container_name: nginx
     env_file:
       - .env
@@ -20,7 +21,8 @@ services:
   
   wordpress:
     depends_on:
-      - db
+      - mariadb
+    image: wordpress
     container_name: wordpress
     env_file:
       - .env
@@ -29,33 +31,37 @@ services:
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - wordpress-volume:/var/www/wordpress
     networks:
       - inception
-  db:
-    image: mariadb:10.5   
-    restart: always
-    environment:
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    env_file:
       - .env
-        # volumes:
-        #- db_data:/var/lib/mysql
-        
-        
-        #mariadb:
-        #container_name: mariadb
-        #  env_file:
-        # - .env
-        # ports:
-        #   - "3306"
-        #build:
-        # context: ./requirements/mariadb
-        #dockerfile: Dockerfile
-        #volumes:
-        #- mariadb-volume:/var/lib/mysql
-        #networks:
-        # - inception
+    ports:
+      - "3306"
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    networks:
+      - inception
+
+    # db:
+  #   image: mariadb:latest
+  #   ports:
+  #     - "3306"
+  #   container_name: mariadb
+  #   restart: on-failure
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+  #   networks:
+  #     - inception
     
 volumes:
   wordpress-volume:
@@ -64,13 +70,12 @@ volumes:
       type: none
       device: /home/eleotard/data/wordpress
       o: bind
-        #db:
-        #mariadb-volume:
-        #driver: local
-        #   driver_opts:
-        # type: none
-        # device: /home/eleotard/data/mariadb
-        #    o: bind
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/eleotard/data/mariadb
+      o: bind
 
 networks:
   inception:
