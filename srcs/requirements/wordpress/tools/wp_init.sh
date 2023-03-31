@@ -1,30 +1,40 @@
 #!/bin/sh
 
-sleep 10
+wp core download --locale=fr_FR --allow-root
 
-if [ -f ./worpress/wp-config.php ];
+sleep 2
 
+if [ -f /var/www/wp-config.php ]
 then
-	echo "Wordpress already installed"
+	echo "===> wp-config.php already exist <==="
+	sleep 2
 else
-	wget http://wordpress.org/latest.tar.gz
-	tar -xzf latest.tar.gz
-	rm -f latest.tar.gz
-	chown -R root:root wordpress
-	
-	cd wordpress
-	sed -i "s/password_here/$MYSQL_PASSWORD/g" wp-config-sample.php
-	sed -i "s/username_here/$MYSQL_USER/g" wp-config-sample.php
-	sed -i "s/database_name_here/$MYSQL_DATABASE/g" wp-config-sample.php
-	sed -i "s/localhost/$WORDPRESS_DB_HOST/g" wp-config-sample.php
+echo "===> create wp-config.php <==== "
+sleep 5
 
-	mv wp-config-sample.php wp-config.php
-	
-	#wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-	#chmod +x wp-cli.phar
-	#mkdir -p /usr/local/bin/wp
-	#mv wp-cli.phar /usr/local/bin/wp
-	#echo "Wordpress installation finished"
+wp core config	--dbname=$MYSQL_DATABASE \
+				--dbuser=$MYSQL_USER \
+				--dbpass=$MYSQL_PASSWORD \
+				--dbhost=$DB_HOST_NAME \
+				--dbcharset=$WP_CHARSET \
+				--dbprefix=wp_ \
+				--dbcollate="utf8_general_ci" \
+				--allow-root \
+					
+sleep 2
+
+wp core install --url="eleotard.42.fr" \
+				--title=Inception \
+				--admin_user=$MYSQL_USER \
+				--admin_password=$MYSQL_PASSWORD \
+				--admin_email=eleotard@student.42.fr \
+				--allow-root \
+
+wp user create $WP_USER $WP_USER_EMAIL --role=author --user_pass=$WP_USER_PASSWORD --allow-root
+
 fi
+mkdir -p /run/php
+chown -R www-data:www-data /var/www/*
+chmod -R 755 /var/www/*
 
 exec "$@"

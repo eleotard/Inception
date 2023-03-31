@@ -1,35 +1,44 @@
 #!/bin/bash
 
-#MYSQL_DATABASE=wordpress_ddb
-#MYSQL_ROOT_PASSWORD=johnny58
-#MYSQL_USER=clara58
-#MYSQL_PASSWORD=mamoure58
-set -ex
+#set -ex
 
-if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ];
+# 	mysql_install_db --datadir=/var/lib/mysql
+# 	mysqld_safe &
+# 	sleep 2
 
-then
-	mysql_install_db
-	service mysql start
-	# PID=$!
-	until mysqladmin ping; do 
-		sleep 2
-	done
-		
+# 	#mysql -D mysql < "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED by '$MYSQL_PASSWORD';GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' WITH GRANT OPTION;SET PASSWORD FOR 'root'@'localhost'=PASSWORD('$MYSQL_ROOT_PASSWORD');FLUSH PRIVILEGES;" | true
+# 	mysql -u root --skip-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
+# 	mysql -u root --skip-password -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
+# 	mysql -u root --skip-password -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+# 	mysql -u root --skip-password -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+# 	mysql -u root --skip-password -e "FLUSH PRIVILEGES;"
 
-	# mysql -e "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
-	# mysql -e "FLUSH PRIVILEGES;"
-	mysql -D mysql < "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED by '$MYSQL_PASSWORD';GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' WITH GRANT OPTION;SET PASSWORD FOR 'root'@'localhost'=PASSWORD('$MYSQL_ROOT_PASSWORD');FLUSH PRIVILEGES;" | true
+# 	#echo "Database created ! "
 
-	# mysql -e "GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+# 	#service mysql stop | echo -n ""
+# 	mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
 
-	echo "Database created ! "
+# exec mysqld_safe
 
-	# kill $PID	
-	# wait $PID
-	service mysql stop | echo -n ""
+
+if [ -d /var/lib/mysql/mysql ]; then 
+	echo "===> $MYSQL_DATABASE already exist !"
+else
+	echo "Create DATABASE $MYSQL_DATABASE"
+	mysql_install_db --datadir=/var/lib/mysql
+	mysqld_safe &
+	sleep 2
+
+	mysql -u  root  --skip-password << EOF
+		ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+		CREATE DATABASE  IF NOT EXISTS $MYSQL_DATABASE CHARACTER SET utf8 COLLATE utf8_general_ci;
+		CREATE USER  IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED by '$MYSQL_PASSWORD';
+		GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';
+		FLUSH PRIVILEGES;
+EOF
+
+	mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
+	sleep 2
 fi
 
-mysqld_safe
-
-#exec "$@"
+exec mysqld -u root

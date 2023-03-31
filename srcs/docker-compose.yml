@@ -49,19 +49,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - mariadb_volume:/var/lib/mysql
+    restart: on-failure
     networks:
       - inception
-
-    # db:
-  #   image: mariadb:latest
-  #   ports:
-  #     - "3306"
-  #   container_name: mariadb
-  #   restart: on-failure
-  #   volumes:
-  #     - db_data:/var/lib/mysql
-  #   networks:
-  #     - inception
     
 volumes:
   wordpress-volume:
