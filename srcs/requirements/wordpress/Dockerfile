@@ -16,10 +16,6 @@ COPY	./tools/wp_init.sh /usr/local/bin/
 
 RUN	chmod +x /usr/local/bin/wp_init.sh
 
-# RUN	wget https://wordpress.org/wordpress-6.0.tar.gz -P /var/www
-# RUN cd /var/www && tar -xzf wordpress-6.0.tar.gz && rm wordpress-6.0.tar.gz
-# RUN chown -R root:root /var/www/wordpress
-
 WORKDIR /var/www/
 
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -28,6 +24,6 @@ RUN mv wp-cli.phar /usr/local/bin/wp
 
 ENTRYPOINT ["/usr/local/bin/wp_init.sh"]
 
-CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]
+CMD ["/usr/sbin/php-fpm7.3", "-F"]
 
 

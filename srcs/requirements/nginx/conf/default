@@ -9,12 +9,12 @@ server {
 	ssl_certificate_key /etc/ssl/inception.key;
 	ssl_protocols TLSv1.2 TLSv1.3;
 	
-	root /var/www/wordpress;
+	root /var/www/;
 
 	# Add index.php to the list if you are using PHP
-	index index.php;
+	index index.php index.html;
 
-	server_name eleotard.42.fr www.eleotard.42.fr;
+	server_name eleotard.42.fr;
 
 	location / {
 		# First attempt to serve request as file, then

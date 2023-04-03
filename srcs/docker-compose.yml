@@ -15,13 +15,13 @@ services:
     ports:
       - 443:443
     volumes:
-      - wordpress-volume:/var/www/wordpress
+      - wordpress-volume:/var/www/
     networks:
       - inception
   
   wordpress:
     depends_on:
-      - mariadb
+      - db
     image: wordpress
     container_name: wordpress
     env_file:
@@ -33,11 +33,11 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - wordpress-volume:/var/www/wordpress
+      - wordpress-volume:/var/www/
     networks:
       - inception
 
-  mariadb:
+  db:
     image: mariadb
     container_name: mariadb
     env_file:
@@ -52,7 +52,19 @@ services:
     restart: on-failure
     networks:
       - inception
-    
+  
+  # db:
+  #   image: mariadb:latest
+  #   environment:
+  #     MYSQL_DATABASE: "wordpress_ddb"
+  #     MYSQL_ROOT_PASSWORD: "Johnny58"
+  #     MYSQL_USER: "Clara58"
+  #     MYSQL_PASSWORD: "Mamoure58"
+  #   ports:
+  #     - "3306"
+  #   networks:
+  #     - inception
+
 volumes:
   wordpress-volume:
     driver: local
