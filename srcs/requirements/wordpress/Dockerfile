@@ -7,7 +7,7 @@ RUN	apt-get update -y; \
 	apt-get install -y sudo; \
 	apt-get install -y wget; \
 	apt-get install -y php7.3 php-fpm php-mysql; \
-	apt-get install -y mariadb-client; \
+	apt-get install -y mariadb-server mariadb-client; \
 	apt-get autoclean
 
 #juste specifie le port d'ecoute pour fpm

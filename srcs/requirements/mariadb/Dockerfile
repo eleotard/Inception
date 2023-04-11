@@ -19,4 +19,3 @@ RUN	rm -rf /var/lib/mysql; \
 
 ENTRYPOINT ["sh", "/usr/local/bin/mdb_init.sh"]
 
-#CMD ["mysqld", "--bind-adress=0.0.0.0", "--log-error=/var/lib/mysql/error.log"]

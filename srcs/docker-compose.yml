@@ -52,18 +52,6 @@ services:
     restart: on-failure
     networks:
       - inception
-  
-  # db:
-  #   image: mariadb:latest
-  #   environment:
-  #     MYSQL_DATABASE: "wordpress_ddb"
-  #     MYSQL_ROOT_PASSWORD: "Johnny58"
-  #     MYSQL_USER: "Clara58"
-  #     MYSQL_PASSWORD: "Mamoure58"
-  #   ports:
-  #     - "3306"
-  #   networks:
-  #     - inception
 
 volumes:
   wordpress-volume:
