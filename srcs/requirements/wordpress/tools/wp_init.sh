@@ -8,7 +8,7 @@ then
 	sleep 2
 else
 	echo "===> create wp-config.php <==== "
-
+	sleep 2
 	wp core download --locale=fr_FR --allow-root
 
 	wp config create --allow-root --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=$DB_HOST_NAME
